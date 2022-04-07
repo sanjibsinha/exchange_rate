@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:price_tracker/model/happy_theme.dart';
 import '../model/usd_data.dart';
 
 class DisplayExchangerateInUSD extends StatefulWidget {
@@ -28,7 +29,7 @@ class _DisplayExchangerateInUSDState extends State<DisplayExchangerateInUSD> {
       onChanged: (value) {
         setState(() {
           selectedCurrency = value!;
-          //getConvertedValue();
+          getConvertedValueInSelectedCurrency();
         });
       },
     );
@@ -37,7 +38,7 @@ class _DisplayExchangerateInUSDState extends State<DisplayExchangerateInUSD> {
   String? value = '?';
   String key = 'USD';
 
-  void getConvertedValue() async {
+  void getConvertedValueInSelectedCurrency() async {
     try {
       Map<String, String>? data =
           await USDData().getUSDDataMap(selectedCurrency, key);
@@ -45,21 +46,25 @@ class _DisplayExchangerateInUSDState extends State<DisplayExchangerateInUSD> {
         value = data![key];
       });
     } catch (e) {
-      print(e);
+      throw '$e';
     }
   }
 
   @override
   void initState() {
     super.initState();
-    //getConvertedValue();
+    getConvertedValueInSelectedCurrency();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Price Tracker'),
+        backgroundColor: HappyTheme.inactiveCoor,
+        title: Text(
+          'Exchange Rate',
+          style: HappyTheme.appbarStyle,
+        ),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -68,7 +73,7 @@ class _DisplayExchangerateInUSDState extends State<DisplayExchangerateInUSD> {
           Padding(
             padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
             child: Card(
-              color: Colors.redAccent,
+              color: HappyTheme.shrineBrown600,
               elevation: 5.0,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
@@ -79,10 +84,7 @@ class _DisplayExchangerateInUSDState extends State<DisplayExchangerateInUSD> {
                 child: Text(
                   '1 USD = $value $selectedCurrency',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                  ),
+                  style: HappyTheme.answerStyle,
                 ),
               ),
             ),
@@ -91,7 +93,7 @@ class _DisplayExchangerateInUSDState extends State<DisplayExchangerateInUSD> {
             height: 150.0,
             alignment: Alignment.center,
             padding: const EdgeInsets.only(bottom: 30.0),
-            color: Colors.red,
+            color: HappyTheme.shrinePink300,
             child: selectDropDownList(),
           ),
         ],
